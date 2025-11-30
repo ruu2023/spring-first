@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstapp.configs.ApiRoutes;
@@ -31,10 +34,22 @@ public class FirstController {
 		return userList;
 	}
 	
+	// GET by name List
+	@GetMapping(ApiRoutes.User.GETBYNAME)
+	public List<User> getByUserName(@PathVariable String name) {
+		return userRepository.findByName(name);
+	}
+
+	// GET by name List
+	@GetMapping(ApiRoutes.User.GET_NAMES_BY_IDS)
+	public List<User> getNamesByIds(@RequestParam("id") List<Long> ids) {
+		return userRepository.findByIdIn(ids);
+	}
+	
 	@PostMapping(ApiRoutes.User.CREATE)
-	public String create() {
+	public String create(@RequestBody User body) {
 		User user = new User();
-		user.setName("本日");
+		user.setName(body.getName());
 		userRepository.save(user);
 		return "created";
 	}
